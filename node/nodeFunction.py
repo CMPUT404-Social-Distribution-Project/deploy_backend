@@ -48,7 +48,7 @@ class CustomBasicAuthentication(authentication.BasicAuthentication):
             remote_node_host = request.build_absolute_uri('/')
             remoteNode = Node.objects.filter(host__contains=remote_node_host)
             if not remoteNode.exists():
-                raise exceptions.AuthenticationFailed("This host has not been added by server admin")
+                raise exceptions.AuthenticationFailed(f"The host '{remote_node_host}' has not been added by server admin")
 
             if username == remoteNode.first().username and password == remoteNode.first().password:
                 return (Authenticated(True), None)

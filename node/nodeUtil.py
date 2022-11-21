@@ -6,6 +6,7 @@ def authenticated_GET(url, node):
     sends a GET request to that url with HTTP Basic Auth
     '''
     res = requests.get(url, auth=(node.username, node.password))
+    print(res.content)
     return res
 
 def authenticated_POST(url, node, data):
