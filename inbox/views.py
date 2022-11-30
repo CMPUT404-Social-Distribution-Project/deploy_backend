@@ -201,7 +201,7 @@ class InboxApiView(GenericAPIView):
                     validate_like(request.data)
                     print("inbox_like 1")
                     actor_object = get_or_create_author(request.data['author'])
-                    print(f"inbox_like 2, {actor_obj}")
+                    print(f"inbox_like 2, {actor_object}")
 
                     if actor_object == None:
                         return response.Response("Something went wrong getting or creating author.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
