@@ -181,8 +181,10 @@ def remote_author_exists(ID):
     # ID could be a UUID/the id that is extracted from the URL.
     # Use that to check if it is in the id field
     contains = Author.objects.filter(id__contains=ID)
-    uuid = Author.objects.filter(uuid=ID)
-    return obj.exists() or contains.exists() or uuid.exists()
+    if (isUUID(ID)):
+        uuid = Author.objects.filter(uuid=ID)
+        return uuid.exists()
+    return obj.exists() or contains.exists()
 
 def remote_post_exists(post_id):
     obj = Post.objects.filter(id=post_id)
