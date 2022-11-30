@@ -17,7 +17,7 @@ from node.utils import authenticated_GET, authenticated_POST, authenticated_GET_
 from uuid import uuid4
 
 our_frontends = ["https://superlative-gelato-dcf1b6.netlify.app"]
-our_backends = ["https://cs404-project.herokuapp.com", "http://localhost:8000"] 
+our_backends = ["https://cs404-project.herokuapp.com"] 
 author_required_fields = ["type", "id", "url", "host", "displayName", "github", "profileImage"]
 
 
@@ -441,11 +441,7 @@ def get_or_create_author(author):
     author = the JSON dict
     '''
     author_url_id = author['id']
-    print(f"get_or_create_author 1")
-
     author_uuid = get_author_uuid_from_id(author_url_id)   # eg ['http://localhost:8000', 'author_uuid']
-    print(f"get_or_create_author 2, {author_uuid}")
-
     author_obj = None
     # 1.check if the actor exist in the local db.() 
     # 2.if dont exist then this actor is likely a remote author that sent this follow request to us
@@ -453,17 +449,11 @@ def get_or_create_author(author):
                             # we must create this remote author to our local db
     #NOTE remote author in our local db have uuid = id 
     if (not is_our_backend(author['host'])):  # this request is sent by remote
-        print(f"get_or_create_author 3")
-
         # create the remote author to this db
         if (not remote_author_exists(author_url_id)):
-            print(f"get_or_create_author 4")
-
             create_remote_author(author)
             author_obj = Author.objects.get(id=author_url_id)
         else:  # this remote author already exist in our local db
-            print(f"get_or_create_author 5")
-
             author_obj = Author.objects.get(id=author_url_id)  # NOTE, getting by ID for now since remote_author_exist check used that too
     else:  # case: this is request from our server
         author_obj = Author.objects.get(uuid=author_uuid)
@@ -524,12 +514,10 @@ def check_remote_fetch(author_obj, endpoint):
 
     if not is_our_backend(author_obj.host):
         target = f"authors/{get_author_uuid_from_id(author_obj.id)}{endpoint}"
-        print(target)
         res = authenticated_GET_host(target, author_obj.host, author_obj.id)
         if res.status_code == 200:
             return res.json()
         else:
-            print(res.text)
             raise ValueError(f"Could not fetch to {author_obj.id}{endpoint}. {res.status_code}:{res.text}")
     return None
 

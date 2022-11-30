@@ -200,7 +200,6 @@ class InboxApiView(GenericAPIView):
                     
                     validate_like(request.data)
                     actor_object = get_or_create_author(request.data['author'])
-
                     if actor_object == None:
                         return response.Response("Something went wrong getting or creating author.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -208,12 +207,10 @@ class InboxApiView(GenericAPIView):
                     # summary changes depending on the type it's liked on
                     actor_name = actor_object.displayName
                     summary = f"{actor_name} likes your {like_type}"
-
                     like = Like.objects.filter(author = actor_object,object = likes_serializer.validated_data["object"]).first()
 
                     if like == None:
                         like = Like.objects.create(author = actor_object,object = likes_serializer.validated_data["object"], summary =summary)
-
                     else:
                         return response.Response("Like already exist", status=status.HTTP_403_FORBIDDEN)
                     # add like object to inbox of author
