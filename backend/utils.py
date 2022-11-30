@@ -17,7 +17,7 @@ from node.utils import authenticated_GET, authenticated_POST, authenticated_GET_
 from uuid import uuid4
 
 our_frontends = ["https://superlative-gelato-dcf1b6.netlify.app"]
-our_backends = ["https://cs404-project.herokuapp.com"] 
+our_backends = ["https://cs404-project.herokuapp.com", "http://localhost:8000"] 
 author_required_fields = ["type", "id", "url", "host", "displayName", "github", "profileImage"]
 
 
@@ -213,20 +213,14 @@ def is_URL(string):
 
 def create_remote_author(remote_author):
     '''remote_author is a dict (JSON)'''
-    print(f"create_remote_author 1, {remote_author}")
 
     remote_author_uuid = get_author_uuid_from_id(remote_author["id"])
     if not isUUID(remote_author_uuid):
         remote_author_uuid = uuid4()
 
-    print(f"create_remote_author 2")
-    
-
     if Author.objects.filter(id__contains=remote_author_uuid).exists() or \
         Author.objects.filter(uuid=remote_author_uuid):
         return
-
-    print(f"create_remote_author 3")
 
     if display_name_exists(remote_author["displayName"]):
         remote_author["displayName"] = remote_author["displayName"]+':'+remote_author["host"]
@@ -240,14 +234,10 @@ def create_remote_author(remote_author):
     if not is_URL(remote_author["profileImage"]):
         remote_author["profileImage"] = ""
 
-    print(f"create_remote_author 3")
-
     author_serializer = AuthorSerializer(data=remote_author)
 
     try:
         if author_serializer.is_valid(raise_exception=True):
-            print(f"create_remote_author 4")
-
             author_serializer.save(
                     uuid= remote_author_uuid,
                     id=remote_author.get("id"),

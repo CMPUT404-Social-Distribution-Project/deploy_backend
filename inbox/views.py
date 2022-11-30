@@ -268,7 +268,7 @@ class InboxApiView(GenericAPIView):
                     comment = Comment.objects.get(id=request.data["id"])
                 
                     # update count
-                    post_obj = Post.objects.get(id=request.data["object"])
+                    post_obj = Post.objects.filter(id=request.data["object"])
                     post_obj.update(count=post_obj.first().count + 1)
                     
                 inbox.comments.add(comment)
