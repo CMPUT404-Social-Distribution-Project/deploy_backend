@@ -211,13 +211,20 @@ def is_URL(string):
 
 def create_remote_author(remote_author):
     '''remote_author is a dict (JSON)'''
+    print(f"create_remote_author 1, {remote_author}")
+
     remote_author_uuid = get_author_uuid_from_id(remote_author["id"])
     if not isUUID(remote_author_uuid):
         remote_author_uuid = uuid4()
 
+    print(f"create_remote_author 2")
+    
+
     if Author.objects.filter(id__contains=remote_author_uuid).exists() or \
         Author.objects.filter(uuid=remote_author_uuid):
         return
+
+    print(f"create_remote_author 3")
 
     if display_name_exists(remote_author["displayName"]):
         remote_author["displayName"] = remote_author["displayName"]+':'+remote_author["host"]
@@ -231,10 +238,14 @@ def create_remote_author(remote_author):
     if not is_URL(remote_author["profileImage"]):
         remote_author["profileImage"] = ""
 
+    print(f"create_remote_author 3")
+
     author_serializer = AuthorSerializer(data=remote_author)
 
     try:
         if author_serializer.is_valid(raise_exception=True):
+            print(f"create_remote_author 4")
+
             author_serializer.save(
                     uuid= remote_author_uuid,
                     id=remote_author.get("id"),
@@ -438,7 +449,11 @@ def get_or_create_author(author):
     author = the JSON dict
     '''
     author_url_id = author['id']
+    print(f"get_or_create_author 1")
+
     author_uuid = get_author_uuid_from_id(author_url_id)   # eg ['http://localhost:8000', 'author_uuid']
+    print(f"get_or_create_author 2, {author_uuid}")
+
     author_obj = None
     # 1.check if the actor exist in the local db.() 
     # 2.if dont exist then this actor is likely a remote author that sent this follow request to us
@@ -446,11 +461,17 @@ def get_or_create_author(author):
                             # we must create this remote author to our local db
     #NOTE remote author in our local db have uuid = id 
     if (not is_our_backend(author['host'])):  # this request is sent by remote
+        print(f"get_or_create_author 3")
+
         # create the remote author to this db
         if (not remote_author_exists(author_url_id)):
+            print(f"get_or_create_author 4")
+
             create_remote_author(author)
             author_obj = Author.objects.get(id=author_url_id)
         else:  # this remote author already exist in our local db
+            print(f"get_or_create_author 5")
+
             author_obj = Author.objects.get(id=author_url_id)  # NOTE, getting by ID for now since remote_author_exist check used that too
     else:  # case: this is request from our server
         author_obj = Author.objects.get(uuid=author_uuid)
