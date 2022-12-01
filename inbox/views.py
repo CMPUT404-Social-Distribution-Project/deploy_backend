@@ -159,6 +159,7 @@ class InboxApiView(GenericAPIView):
             
         elif request.data['type'].lower() == "post":
             try:
+                print("INBOX_POST", request.data)
                 request_post_data = validate_remote_post(request.data)
                 if type(request_post_data) == str:
                     raise ValueError(request_post_data)
