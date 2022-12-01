@@ -48,7 +48,7 @@ class InboxApiView(GenericAPIView):
     permission_classes = [AuthenticateGET]
     serializer_class = PostSerializer
     http_method_names=['get', 'post', 'delete']
-    parser_classes = (JSONParser, )
+    parser_classes=(JSONParser,)
     pagination_class = CustomPagination
     
     def get(self, request, author_id):
@@ -106,7 +106,7 @@ class InboxApiView(GenericAPIView):
                 )
                 if res.status_code >= 200 and res.status_code < 300:
                     print(f"Success sending data to inbox of remote author {node_author_inbox_url}")
-                    return response.Response("Sent data to {node_author_inbox_url} inbox of remote author", status=status.HTTP_200_OK)
+                    return response.Response(f"Sent data to {node_author_inbox_url} inbox of remote author", status=status.HTTP_200_OK)
                 else:
                     print(f"Failed to send data to remote author '{author.displayName}' to {node_author_inbox_url}")
                     print(f"{res.status_code}:{res.text}")
@@ -159,11 +159,9 @@ class InboxApiView(GenericAPIView):
             
         elif request.data['type'].lower() == "post":
             try:
-                print("INBOX_POST", request.data)
                 request_post_data = validate_remote_post(request.data)
                 if type(request_post_data) == str:
                     raise ValueError(request_post_data)
-
                 request_post_author = get_or_create_author(request_post_data["author"])
                 
                 if request_post_author == None:
