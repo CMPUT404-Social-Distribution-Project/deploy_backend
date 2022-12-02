@@ -502,8 +502,11 @@ def fetch_author(author_uuid):
         authors_url = f"{node.host}authors/{author_uuid}"
         res = authenticated_GET(authors_url, node)
         if res.status_code == 200:
+            print(f"fetch_author: Found author at {authors_url}!",res.content)
             create_remote_author(res.json())
             return Author.objects.get(id__contains=author_uuid)
+        else:
+            print(f"Failed to check if author exists at {authors_url}.")
 
     return "Author was not found"
 
