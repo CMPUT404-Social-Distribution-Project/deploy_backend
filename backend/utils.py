@@ -222,6 +222,10 @@ def create_remote_author(remote_author):
         Author.objects.filter(uuid=remote_author_uuid):
         return
 
+    if remote_author.get("displayName") == None:
+        # displayName is null? Set it the the uuid
+        remote_author_uuid.hex
+
     if display_name_exists(remote_author["displayName"]):
         remote_author["displayName"] = remote_author["displayName"]+':'+remote_author["host"]
 
