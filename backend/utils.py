@@ -224,7 +224,7 @@ def create_remote_author(remote_author):
 
     if remote_author.get("displayName") == None:
         # displayName is null? Set it the the uuid
-        remote_author_uuid.hex
+        remote_author["displayName"] = remote_author_uuid
 
     if display_name_exists(remote_author["displayName"]):
         remote_author["displayName"] = remote_author["displayName"]+':'+remote_author["host"]
