@@ -491,11 +491,12 @@ def fetch_author(author_uuid):
     '''
 
     uuid_in_id = Author.objects.filter(id__contains=author_uuid)
-    uuid = Author.objects.filter(uuid=author_uuid)
     if uuid_in_id.exists():
         return uuid_in_id.first()
-    elif uuid.exists():
-        return uuid.first()
+    if isUUID(author_uuid):
+        uuid = Author.objects.filter(uuid=author_uuid)
+        if uuid.exists():
+            return uuid.first()
 
     nodes = Node.objects.all()
     for node in nodes:
