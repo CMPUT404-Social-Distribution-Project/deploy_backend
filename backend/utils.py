@@ -230,6 +230,8 @@ def create_remote_author(remote_author):
     if remote_author.get("github") != None and not is_URL(remote_author["github"]):
         # create github url for them
         remote_author["github"] = f"https://github.com/{remote_author['github']}"
+    elif remote_author.get("github") == None:
+        remote_author["github"] = ""
 
     if not is_URL(remote_author["profileImage"]):
         remote_author["profileImage"] = ""
