@@ -22,8 +22,7 @@ from author.views import UserViewSet
 from auth.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
 from followers.views import TrueFriendApiView, TrueFriendsApiView
 from like.views import LikesPostApiView, AuthorLikedApiView, LikesCommentApiView
-from node.views import AcceptConnectionFromRemote, getNode, getNodeAuthors
-from inbox.views import InboxApiView
+from node.views import AcceptConnectionFromRemote, getNode, getNodeAuthors, getNodePosts
 from django.conf import settings
 from django.conf.urls.static import static
 from inbox.views import InboxApiView
@@ -60,6 +59,7 @@ urlpatterns = [
     path('service/node/<str:hostName>', AcceptConnectionFromRemote, name="connect to our server"),
     path('service/node/', getNode, name="retrieves node object"),
     path('service/node/authors/', getNodeAuthors, name="retrieves all authors from all nodes"),
+    path('service/node/posts/', getNodePosts, name="retrieves all posts from all nodes"),
 
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
