@@ -2,7 +2,7 @@
 2. ```heroku login```
 3. ```cd deploy_backend/```
 4. ```git init```
-5. ```heroku git:remote -a **your app name**```
+5. ```heroku git:remote -a your app name ```
   
 5. Deploy your application  
 ```
